@@ -8,6 +8,6 @@ import kotlinx.coroutines.delay
  * Sandbox for playing around with Kotlin
  */
 suspend fun main() = coroutineScope {
-    delay(5000)
+    testJobCancelingJob2()
     Unit
 }

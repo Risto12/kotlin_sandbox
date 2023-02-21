@@ -48,29 +48,6 @@ suspend fun testJobConcurrency3() = coroutineScope {
     println("Parent ended")
 }
 
-/**
- * missing solve
- */
-suspend fun testJobCancellation2() = coroutineScope {
-    println("Parent start")
-    val job1 = launch {
-        println("Job1 started")
-        delay(3000)
-        println("Job1 ended")
-    }
-
-    launch {
-        println("Job2 started")
-        delay(1000)
-        delay(1000)
-        println("Job2 ended")
-    }
-    delay(500)
-    job1.cancel()
-    println("Job1 cancelled")
-    delay(2000)
-    println("Parent end")
-}
 
 /**
  * Testing coroutineContext.job.children property that keeps track of all of the launched
@@ -107,4 +84,58 @@ suspend fun testJobWillNeverEnd(complete: Boolean = false) = coroutineScope {
     // job doesn't go to complete state that is required by join() to proceed
     job.join()
     println("Parent ended")
+}
+
+// Job cancel memo
+// When cancel is called:
+// Cancels at first suspension point (delay, yield ...)
+// Jobs children's will also be cancelled
+// Job that is cancelled cannot be used as a parent for new jobs anymore
+suspend fun testJobCancelingJob1(complete: Boolean = false) = coroutineScope {
+    val job1 = launch {
+        println("Job1 started")
+        launch {
+            println("Job1 child process started")
+            delay(3000)
+            println("Job1 child process stopped") // Never printed because of cancellation
+        }
+        delay(500)
+        println("Job1 running ...")
+        delay(500) // Cancel kicks in at this step
+        println("Job1 ended") // Never printed because of cancellation
+    }
+    delay(500)
+    job1.cancel()
+    job1.join() // After canceling join should be called so that there wouldn't be race conditions
+    delay(500)
+    println("Parent process ended") // this will be printed still
+}
+
+suspend fun testJobCancelingJob2(complete: Boolean = false) = coroutineScope {
+    val job1 = launch {
+        println("Job1 started")
+        launch {
+            println("Job1 child process 1 started")
+            delay(500)
+            // Exception that inherit from cancellation exception will cancel the child coroutine -> parent coroutine -> and parents other childs if exists
+            throw object : CancellationException("Canceling") {}
+            delay(500)
+            println("Job1 child process stopped")
+        }
+        launch {
+            println("Job1 child process 2 started")
+            delay(1000)
+            println("Job1 child process 2 stopped") // Never printed because parent cancels this
+        }
+
+        delay(2000) // Never printed
+        println("Job1 running ...") // Never printed
+        delay(2000) // Never printed
+        println("Job1 ended") // Never printed
+    }
+    delay(500)
+    job1.cancel()
+    job1.join()
+    delay(500)
+    println("Parent process ended") // this will be printed still
 }
