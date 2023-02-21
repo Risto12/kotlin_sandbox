@@ -7,7 +7,11 @@ import kotlinx.coroutines.delay
 /**
  * Sandbox for playing around with Kotlin
  */
-suspend fun main() = coroutineScope {
-    testJobCancelingJob2()
+/*suspend fun main() = coroutineScope {
+    testJobCancelingJob3()
     Unit
+}
+*/
+suspend fun main() = coroutineScope {
+    testCancellationException(true)
 }

@@ -139,3 +139,25 @@ suspend fun testJobCancelingJob2(complete: Boolean = false) = coroutineScope {
     delay(500)
     println("Parent process ended") // this will be printed still
 }
+
+/***
+ * No specific meaning for this function
+ */
+suspend fun playingJobCancelingJob3(complete: Boolean = false) = coroutineScope {
+    val job = launch {
+        val job1 = Job()
+        launch(job1) {
+            println("started")
+            delay(500)
+            println("hello")
+            delay(5000)
+            println("hello")
+            job1.complete()
+        }
+        delay(500)
+        job1.join()
+    }
+    delay(500)
+    job.join()
+    println("Parent process ended") // this will be printed still
+}
