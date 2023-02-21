@@ -1,11 +1,13 @@
-import CoroutinePlayGround.testContextPassing
-import CoroutinePlayGround.testJobCancellation1
-import CoroutinePlayGround.testJobCancellation2
-import CoroutinePlayGround.testingCoroutineJoin
+import CoroutinePlayGround.*
+import PlayGround.safeCasting1
+import PlayGround.safeCasting2
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
-
+/**
+ * Sandbox for playing around with Kotlin
+ */
 suspend fun main() = coroutineScope {
-    testingCoroutineJoin()
+    delay(5000)
     Unit
 }

@@ -1,7 +1,4 @@
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 // coroutineScope block the suspending function where it was called until all of its children's has ended
@@ -20,7 +17,8 @@ suspend fun coroutineScopeTest1() = coroutineScope {
 
 // Just async version of above
 suspend fun coroutineScopeTest1Async() = coroutineScope {
-    val a1 = async {
+    // Deferred is also a job
+    val a1: Deferred<String> = async {
         delay(2000)
         "Async hello1"
     }
