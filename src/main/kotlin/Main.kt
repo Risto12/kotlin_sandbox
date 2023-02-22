@@ -1,8 +1,5 @@
-import CoroutinePlayGround.*
-import PlayGround.safeCasting1
-import PlayGround.safeCasting2
+import PlayGround.testChannelProducerConsumer1
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 
 /**
  * Sandbox for playing around with Kotlin
@@ -13,5 +10,6 @@ import kotlinx.coroutines.delay
 }
 */
 suspend fun main() = coroutineScope {
-    testCancellationException(true)
+    testChannelProducerConsumer1()
+
 }

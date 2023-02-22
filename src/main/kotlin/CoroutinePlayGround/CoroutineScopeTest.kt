@@ -35,7 +35,7 @@ suspend fun coroutineScopeTest1Async() = coroutineScope {
     println("Async hello3")
 }
 
-suspend fun testCoroutineScope() {
+suspend fun testCoroutineScope1() {
     val scope = CoroutineScope(SupervisorJob())
     val job = scope.launch {
         println("Started")
@@ -94,4 +94,81 @@ suspend fun testCancellationException(superVisorJob: Boolean = true) = coroutine
     childJob1.join()
     childJob2.join()
     println("Ending parent job")
+}
+
+
+suspend fun testExceptionHandler(superVisorJob: Boolean = true) {
+    val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable -> println("Exception thrown") }
+    val job = if(superVisorJob) SupervisorJob() else Job()
+    val scope = CoroutineScope(job + exceptionHandler)
+
+    scope.launch {
+        println("Job1 started")
+        delay(500)
+        error("ello")
+        println("Job2 ended")
+    }
+
+    scope.launch {
+        println("Job2 started")
+        delay(2000)
+        println("Job2 ended")
+    }
+
+    delay(3000)
+    println("Parent ended")
+}
+
+suspend fun testCoroutineScope2() = coroutineScope {
+    val a = async {
+        println("async started")
+        delay(2500)
+        println("async ended")
+        "test"
+    }
+    a.await()
+    launch {
+        println("launch started")
+        delay(1000)
+        println("launch ended")
+    }
+    println("Parent ended")
+}
+
+suspend fun testCoroutineScope3(useTest4: Boolean = false) {
+    if (useTest4) testCoroutineScope4() else testCoroutineScope5()
+    println("Waiting")
+}
+
+suspend fun testCoroutineScope4() = coroutineScope {
+    val a = async {
+        println("async started")
+        delay(2500)
+        println("async ended")
+        "test"
+    }
+    a.await()
+    launch {
+        println("launch started")
+        delay(1000)
+        println("launch ended")
+    }
+    println("Parent ended")
+}
+
+suspend fun testCoroutineScope5() = coroutineScope {
+    val scope = CoroutineScope(SupervisorJob())
+    val a = async {
+        println("async started")
+        delay(1500)
+        println("async ended")
+        "test"
+    }
+    a.await()
+    scope.launch {
+        println("launch started")
+        delay(1000)
+        println("launch ended")
+    }
+    println("Parent ended")
 }
