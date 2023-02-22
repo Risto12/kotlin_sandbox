@@ -1,4 +1,6 @@
-import PlayGround.testChannelProducerConsumer1
+
+import CoroutinePlayGround.*
+import PlayGround.sequenceTest
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -10,6 +12,6 @@ import kotlinx.coroutines.coroutineScope
 }
 */
 suspend fun main() = coroutineScope {
-    testChannelProducerConsumer1()
-
+    testFlowEmitAll()
+    Unit
 }
