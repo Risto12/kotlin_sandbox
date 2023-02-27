@@ -49,3 +49,18 @@ suspend fun testFlowEmitAll() {
     println("Hello world")
     println(result)
 }
+
+suspend fun testFlowWinnerInnerFlow() {
+    flow outer@{
+        flow {
+            emit(2)
+        }.collect {
+            emit(it + 2)
+        }
+    }.map {
+        it + 2
+    }.collect {
+        println(it)
+    }
+
+}

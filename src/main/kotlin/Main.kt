@@ -12,6 +12,5 @@ import kotlinx.coroutines.coroutineScope
 }
 */
 suspend fun main() = coroutineScope {
-    testFlowEmitAll()
     Unit
 }
